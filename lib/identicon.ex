@@ -28,10 +28,12 @@ defmodule Identicon do
     %Identicon.Image{hex: hex} # Struct
   end
 
-  def pick_color(image) do
+  # def pick_color(image) do
+  def pick_color(%Identicon.Image{hex: [r, g, b | _tail]} = image) do
     # Pattern match
     # We are looking for an Image, that has a hex prop, that is a list
-    %Identicon.Image{hex: [r, g, b | _tail]} = image # Only want the first 3, acknowledge the rest but don't use
-    [r, g, b]
+    # Only want the first 3, acknowledge the rest but don't use
+
+    %Identicon.Image{image | color: {r, g, b}} # Create new struct and add color prop to it
   end
 end
