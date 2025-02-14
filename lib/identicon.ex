@@ -3,16 +3,16 @@ defmodule Identicon do
   Documentation for `Identicon`.
   """
 
+  def main(input) do
+    input
+    |> hash_input
+  end
+
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Identicon.hello()
-      :world
-
+  Hash the given input using MD5 and convert it to a list.
   """
-  def hello do
-    :world
+  def hash_input(input) do
+    :crypto.hash(:md5, input)
+    |> :binary.bin_to_list
   end
 end
