@@ -20,13 +20,18 @@ defmodule Identicon do
   end
 
   @doc """
-  Build a list of lists where each row is mirrored
+  Build a list where each row is mirrored.
   """
-  def build_grid(%Identicon.Image{hex: hex} = _image) do
+  def build_grid(%Identicon.Image{hex: hex} = image) do
     # Pattern match to get hex and pass it through pipeline
-    hex
-    |> Enum.chunk_every(3, 3, :discard) # chunk/2 deprecated; Need this form to work properly
-    |> Enum.map(&mirror_row/1)
+    grid =
+      hex
+      |> Enum.chunk_every(3, 3, :discard) # chunk/2 deprecated; Need this form to work properly
+      |> Enum.map(&mirror_row/1)
+      |> List.flatten
+      |> Enum.with_index # Take list, create a new tuple with the elements index
+
+    %Identicon.Image{image | grid: grid}
   end
 
   @doc """
