@@ -16,6 +16,17 @@ defmodule Identicon do
     input
     |> hash_input
     |> pick_color
+    |> build_grid
+  end
+
+  @doc """
+  Build a list of lists where each row is mirrored
+  """
+  def build_grid(%Identicon.Image{hex: hex} = _image) do
+    # Pattern match to get hex and pass it through pipeline
+    hex
+    |> Enum.chunk_every(3, 3, :discard) # chunk/2 deprecated; Need this form to work properly
+    |> Enum.map(&mirror_row/1)
   end
 
   @doc """
@@ -28,6 +39,9 @@ defmodule Identicon do
     %Identicon.Image{hex: hex} # Struct
   end
 
+  @doc """
+  Grab the first three values of the hex from the Image struct to use as r, g, b values for the color
+  """
   # def pick_color(image) do
   def pick_color(%Identicon.Image{hex: [r, g, b | _tail]} = image) do
     # Pattern match
@@ -35,5 +49,13 @@ defmodule Identicon do
     # Only want the first 3, acknowledge the rest but don't use
 
     %Identicon.Image{image | color: {r, g, b}} # Create new struct and add color prop to it
+  end
+
+  @doc """
+  Take the first two elements from a list and append them to the end in reverse order.
+  """
+  def mirror_row(row) do
+    [first, second | _tail] = row
+    row ++ [second, first] # Join lists (++)
   end
 end
